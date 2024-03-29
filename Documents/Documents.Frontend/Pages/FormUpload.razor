@@ -1,0 +1,103 @@
+﻿@page "/file-upload"
+
+<h3>Selección de archivos a ser analizados</h3>
+
+<InputFile OnChange="HandleFileSelected" multiple />
+
+@if (previewSource != null && currentFile.ContentType.Equals("application/pdf"))
+{
+    <iframe 
+        src="@previewSource" 
+        width="100%" 
+        height="500px"
+    ></iframe>
+    <button @onclick="AddToFileList">Añadir a la lista</button>
+}
+
+@if (previewSource != null && currentFile.ContentType.StartsWith("image/"))
+{
+    <div>
+        <img 
+            src="@previewSource" 
+            alt="Vista previa" style="max-width: 100%; max-height: 400px; "
+        />
+        <button @onclick="AddToFileList">Añadir a la lista</button>
+    </div>
+}
+
+@if (uploadedFiles.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre del Archivo</th>
+                <th>Tamaño (bytes)</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var file in uploadedFiles)
+        {
+            <tr>
+                <td>@file.Name</td>
+                <td>@file.Size</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<IBrowserFile> uploadedFiles = new List<IBrowserFile>();
+    private string previewSource;
+    private IBrowserFile currentFile; // Guardará el archivo actual seleccionado para la vista previa
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Configura el archivo actual seleccionado para vista previa
+            currentFile = file;
+
+            if (file.ContentType.StartsWith("image/"))
+            {
+                // Tratamiento para imágenes
+                var imageFile = await file.RequestImageFileAsync(file.ContentType, 640, 480);
+                previewSource = await ToImageSource(imageFile, file.ContentType);
+            }
+            else if (file.ContentType.Equals("application/pdf"))
+            {
+                // Tratamiento para PDFs: Convertir a Base64 para mostrar en un <iframe> o con PDF.js
+                previewSource = await ToBase64(file);
+                // Aquí podrías configurar cómo mostrar el PDF
+            }            
+        }
+    }
+
+    private async Task AddToFileList()
+    {
+        // Verifica si el archivo ya está en la lista por nombre
+        if (!uploadedFiles.Any(f => f.Name.Equals(currentFile.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            uploadedFiles.Add(currentFile); // Añade el archivo a la lista si no está duplicado
+        }
+        // Limpia la vista previa y el archivo actual seleccionado
+        previewSource = null;
+        currentFile = null;
+        StateHasChanged(); // Actualiza el estado para reflejar los cambios en la UI
+    }
+
+    private async Task<string> ToImageSource(IBrowserFile file, string format)
+    {
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        return $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+    }
+
+    private async Task<string> ToBase64(IBrowserFile file)
+    {
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        return $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+    }
+}
