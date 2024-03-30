@@ -10,8 +10,8 @@ namespace Documents.Backend.Data
         {
             
         }
-        public DbSet<Facturas> Factura { set; get; }
-        public DbSet<Archivos> Archivo { set; get; }
+        public DbSet<Factura> Facturas { set; get; }
+        public DbSet<Archivo> Archivos { set; get; }
         public DbSet<ProductosFactura> ProductosFactura { set; get; }
         public DbSet<DocumentosInformativos> DocumentosInformativos { set; get; }
 

@@ -2,7 +2,7 @@
 
 namespace Documents.Shared.Entities
 {
-    public class Archivos
+    public class Archivo
     {
         public int ID { get; set; }
         public string NombreArchivo { get; set; } = null!;
