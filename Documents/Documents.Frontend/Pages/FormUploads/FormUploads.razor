@@ -37,6 +37,7 @@
                 <tr>
                     <td>@file.Name</td>
                     <td>@file.Size</td>
+                    <td><input type="checkbox" value="@file.Name" checked></td>
                 </tr>
             }
             @foreach (var fileConverted in uploadedConvertedFiles)
@@ -44,6 +45,7 @@
                 <tr>
                     <td>@fileConverted.Name</td>
                     <td>@fileConverted.Size</td>
+                    <td><input type="checkbox" value="@fileConverted.Name" checked></td>
                 </tr>
             }
         </tbody>
