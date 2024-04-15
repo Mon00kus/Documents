@@ -1,4 +1,4 @@
-﻿namespace Documents.Frontend.Pages.Searchs
+﻿namespace Documents.Frontend.Pages.FormSearchs
 {
     public partial class FormSearchs
     {
