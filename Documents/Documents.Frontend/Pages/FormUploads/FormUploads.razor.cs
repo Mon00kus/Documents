@@ -66,7 +66,7 @@ namespace Documents.Frontend.Pages.FormUploads
                 // Manejar la situación en la que la respuesta no es exitosa
                 throw new InvalidOperationException("No se pudo obtener el stream del archivo convertido.");
             }
-        }             
+        }
 
         private Task AddConvertedFileToFileList()
         {
@@ -86,6 +86,7 @@ namespace Documents.Frontend.Pages.FormUploads
             if (!uploadedConvertedFiles.Any(f => f.Name!.Equals(uploadedConvertedFile.Name, StringComparison.OrdinalIgnoreCase)))
             {
                 uploadedConvertedFiles.Add(uploadedConvertedFile);
+
             }
 
             // Limpia la vista previa y el archivo actual seleccionado

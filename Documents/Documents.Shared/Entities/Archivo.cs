@@ -7,6 +7,7 @@ namespace Documents.Shared.Entities
         public int ID { get; set; }
         public string NombreArchivo { get; set; } = null!;
         public FileType TipoArchivo { get; set; }
+        public string IA { set; get; } = null!;
         public DateTime FechaSubida { get; set; }
     }
 }
